@@ -1,13 +1,19 @@
 
-function Node() {
+function Node(properties) {
   if (!(this instanceof Node)) { return new Node(); }
+
+  this.properties = properties || {};
 }
 
 Node.prototype.type = 'Node';
 
 Node.prototype.isNode = true;
 
-Node.prototype.traverse = function (callback) {
+Node.prototype.getValue = function() {
+  return this.value;
+}
+
+Node.prototype.traverse = function(callback) {
   // execute callback for itself
   callback(this, null, null);
 

@@ -23,7 +23,12 @@ function wrap(valueOrNode, properties) {
 };
 
 function unwrap(valueOrNode) {
+  if (valueOrNode instanceof Node) {
+    return valueOrNode.getValue();
+  }
 
+  // return others unchanged
+  return valueOrNode;
 };
 
 function isNode(valueOrNode) {

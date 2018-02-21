@@ -3,10 +3,10 @@ var Node = require('./Node');
 function LiteralNode(value, properties) {
   if (!(this instanceof LiteralNode)) { return new LiteralNode(value, properties); }
 
+  Node.call(this, properties);
+
   this.value = value;
   this.valueType = typeof value;
-
-  this.properties = properties;
 }
 
 LiteralNode.prototype = new Node();

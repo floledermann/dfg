@@ -3,12 +3,12 @@ var Node = require('./Node');
 function OperatorNode(op, children, properties) {
   if (!(this instanceof OperatorNode)) { return new OperatorNode(op, children, properties); }
 
+  Node.call(this, properties);
+
   this.op = op;
   this.valueType = typeof value;
 
   this.children = children;
-
-  this.properties = properties;
 }
 
 OperatorNode.prototype = new Node();
