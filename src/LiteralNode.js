@@ -1,4 +1,4 @@
-var Node = reuqire('./Node');
+var Node = require('./Node');
 
 function LiteralNode(value, properties) {
   if (!(this instanceof LiteralNode)) { return new LiteralNode(value, properties); }

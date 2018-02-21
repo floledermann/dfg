@@ -1,3 +1,4 @@
+
 function Node() {
   if (!(this instanceof Node)) { return new Node(); }
 }

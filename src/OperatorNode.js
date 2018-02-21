@@ -1,4 +1,4 @@
-var Node = reuqire('./Node');
+var Node = require('./Node');
 
 function OperatorNode(op, children, properties) {
   if (!(this instanceof OperatorNode)) { return new OperatorNode(op, children, properties); }
