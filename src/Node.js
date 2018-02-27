@@ -28,4 +28,8 @@ Node.prototype.traverse = function(callback) {
   _traverse(this, callback);
 };
 
+// TODO: maybe inheritance should be set up like so:
+// https://stackoverflow.com/a/4389429
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create
+
 module.exports = Node;
