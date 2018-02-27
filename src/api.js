@@ -35,12 +35,55 @@ function isNode(valueOrNode) {
   return valueOrNode instanceof Node;
 }
 
+var DEFAULT_FORMAT = {
+  TYPE_FIELD: 'type',
+  VALUE_FIELD: 'value',
+  CHILDREN_FIELD: 'children',
+  OPERATOR_FIELD: 'op'
+}
+
+function fromJSON(jsonString, format) {
+  var data = JSON.parse(jsonString);
+  if (Array.isArray(data)) {
+    return data.map(spec => fromSpec(spec, format));
+  }
+  return fromSpec(data, format);
+}
+
+function toJSON(graph, format) {
+  return '[]';
+}
+
+function fromSpec(spec, format) {
+
+  format = Object.assign({}, DEFAULT_FORMAT, format);
+
+  var type = spec[format.TYPE_FIELD];
+  var value = spec[format.VALUE_FIELD];
+  var op = spec[format.OPERATOR_FIELD];
+
+  var children = spec[format.CHILDREN_FIELD] || [];
+  // remove children from properties
+  delete spec[format.CHILDREN_FIELD];
+  children = children.map(spec => fromSpec(spec, format));
+
+  switch (type) {
+    case 'LiteralNode': return new LiteralNode(value, spec);
+    case 'OperatorNode': return new OperatorNode(op, children, spec);
+  }
+
+  throw new Error("Unknown node type: " + type);
+}
+
 module.exports = {
 
   // main API methods
   wrap: wrap,
   unwrap: unwrap,
   isNode: isNode,
+  fromJSON: fromJSON,
+  toJSON: toJSON,
+  fromSpec: fromSpec,
 
   // node types
   Node: Node,
