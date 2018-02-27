@@ -1,14 +1,14 @@
 var Node = require('./Node');
 
-function OperatorNode(op, children, properties) {
-  if (!(this instanceof OperatorNode)) { return new OperatorNode(op, children, properties); }
+function OperatorNode(op, inputs, properties) {
+  if (!(this instanceof OperatorNode)) { return new OperatorNode(op, inputs, properties); }
 
   Node.call(this, properties);
 
   this.op = op;
   this.valueType = typeof value;
 
-  this.children = children;
+  this.inputs = inputs;
 }
 
 OperatorNode.prototype = new Node();
@@ -25,8 +25,8 @@ OperatorNode.prototype.valueOf = function() {
 */
 
 OperatorNode.prototype.forEach = function (callback) {
-  for (var i = 0; i < this.children.length; i++) {
-    callback(this.children[i], i, this);
+  for (var i = 0; i < this.inputs.length; i++) {
+    callback(this.inputs[i], i, this);
   }
 };
 

@@ -38,9 +38,13 @@ function isNode(valueOrNode) {
 var DEFAULT_FORMAT = {
   TYPE_FIELD: 'type',
   VALUE_FIELD: 'value',
-  CHILDREN_FIELD: 'children',
-  OPERATOR_FIELD: 'op'
-}
+  INPUTS_FIELD: 'inputs',
+  OPERATOR_FIELD: 'op',
+  NODE_TYPE_MAP: {
+    'LiteralNode': 'LiteralNode',
+    'OperatorNode': 'OperatorNode'
+  }
+};
 
 function fromJSON(jsonString, format) {
   var data = JSON.parse(jsonString);
@@ -58,18 +62,20 @@ function fromSpec(spec, format) {
 
   format = Object.assign({}, DEFAULT_FORMAT, format);
 
-  var type = spec[format.TYPE_FIELD];
+  var typeStr = spec[format.TYPE_FIELD];
   var value = spec[format.VALUE_FIELD];
   var op = spec[format.OPERATOR_FIELD];
 
-  var children = spec[format.CHILDREN_FIELD] || [];
-  // remove children from properties
-  delete spec[format.CHILDREN_FIELD];
-  children = children.map(spec => fromSpec(spec, format));
+  var type = format.NODE_TYPE_MAP[typeStr];
+
+  var inputs = spec[format.INPUTS_FIELD] || [];
+  // remove inputs from properties
+  delete spec[format.INPUTS_FIELD];
+  inputs = inputs.map(spec => fromSpec(spec, format));
 
   switch (type) {
     case 'LiteralNode': return new LiteralNode(value, spec);
-    case 'OperatorNode': return new OperatorNode(op, children, spec);
+    case 'OperatorNode': return new OperatorNode(op, inputs, spec);
   }
 
   throw new Error("Unknown node type: " + type);
