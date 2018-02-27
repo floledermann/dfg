@@ -96,8 +96,6 @@ describe("Loading JSON", function() {
       assert(dfg[0] instanceof DFG.LiteralNode);
     });
 
-
-
   });
 
 
