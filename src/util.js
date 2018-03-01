@@ -33,7 +33,11 @@ function fromMathNode(node, options) {
     // Parenteses are simply replaced by their contents
     case 'ParenthesisNode': return fromMathNode(node.getContent(), options);
 
-    case 'SymbolNode': return new SymbolNode(node.name);
+    case 'SymbolNode':
+      if (node.name in math && typeof math[node.name] === 'number') {
+        return new LiteralNode(math[node.name]);
+      }
+      return new SymbolNode(node.name);
 
     // FunctionNode uses a SymbolNode as its name -> convert
     case 'FunctionNode': return new FunctionNode(node.fn.name, mapChildren(node.args));

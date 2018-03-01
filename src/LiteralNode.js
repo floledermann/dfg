@@ -24,12 +24,20 @@ LiteralNode.prototype.forEach = function (callback) {
   // nothing to do, we don't have children
 };
 
-LiteralNode.prototype.match = function(pattern) {
+LiteralNode.prototype.match = function(pattern, options) {
 
-  if (pattern.type == 'LiteralNode' && pattern.value === this.value) {
-    return {
-      root: this,
-      symbols:{}
+  options = options ||  {};
+
+  if (pattern.type == 'LiteralNode') {
+    var match = (pattern.value === this.value);
+    if (!match && options.epsilon && this.valueType == 'number' && pattern.valueType == 'number') {
+      match = (Math.abs(this.value - pattern.value) < options.epsilon);
+    }
+    if (match) {
+      return {
+        root: this,
+        symbols:{}
+      }
     }
   }
 

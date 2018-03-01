@@ -99,4 +99,60 @@ describe("Match patterns in graph", function() {
 
   });
 
+  describe("Named constants", function() {
+
+    it ("PI matches correct value", function() {
+      var node = DFG.util.fromMathString("3.141592653589793");
+      var pattern = DFG.util.fromMathString("PI");
+
+      var match = node.match(pattern);
+
+      assert(match);
+      assert.equal(match.root, node);
+    });
+
+    it ("PI doesn't match other value", function() {
+      var node = DFG.util.fromMathString("4");
+      var pattern = DFG.util.fromMathString("PI");
+
+      var match = node.match(pattern);
+
+      assert.strictEqual(match, false);
+    });
+
+    it ("PI matches within epsilon", function() {
+      var node = DFG.util.fromMathString("3.1415");
+      var pattern = DFG.util.fromMathString("PI");
+
+      var match = node.match(pattern, {epsilon: 0.0001});
+
+      assert(match);
+      assert.equal(match.root, node);
+    });
+
+    it ("PI doesn't match with too small epsilon", function() {
+      var node = DFG.util.fromMathString("3.1415");
+      var pattern = DFG.util.fromMathString("PI");
+
+      var match = node.match(pattern, {epsilon: 0.00001});
+
+      assert.strictEqual(match, false);
+    });
+
+  });
+
+  describe("Find in graph", function() {
+
+    it ("match Literal", function() {
+      var node = DFG.util.fromMathString("2 * 3");
+      var pattern = DFG.util.fromMathString("3");
+
+      var match = node.find(pattern);
+
+      assert(match);
+      assert.equal(match.root, node.inputs[1]);
+    });
+
+  });
+
 });

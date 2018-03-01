@@ -31,7 +31,7 @@ Node.prototype.traverse = function(callback) {
 // Return false if the tree rooted at this node does not match the given pattern
 // Return an object {root: <Node>, symbols: {<name>: <Node>}} if the pattern is found
 
-Node.prototype.match = function(pattern) {
+Node.prototype.match = function(pattern, options) {
 
   // base class only matches Symbols
 
@@ -45,7 +45,28 @@ Node.prototype.match = function(pattern) {
   }
 
   return false;
-  
+
+}
+
+// Finds the given pattern in the subgraph
+// Return false if the tree rooted at this node does not contain the given pattern
+// Return an object {root: <Node>, symbols: {<name>: <Node>}} if the pattern is found
+
+Node.prototype.find = function(pattern, options) {
+
+  var match = this.match(pattern);
+  if (match) return match;
+
+  if (this.inputs && this.inputs.length) {
+    // TODO: support finding ALL matches
+    for (var i=0; i<this.inputs.length; i++) {
+      match = this.inputs[i].find(pattern);
+      if (match) return match;
+    }
+  }
+
+  return false;
+
 }
 
 // TODO: maybe inheritance should be set up like so:

@@ -53,17 +53,17 @@ function permutate(inputArr) {
   return result;
 }
 
-function matchInputs(inputs, pattern) {
+function matchInputs(inputs, pattern, options) {
     var symbols = {};
     for (var i=0; i<inputs; i++) {
-      var match = inputs[i].match(pattern.inputs[i]);
+      var match = inputs[i].match(pattern.inputs[i], options);
       if (!match) return false;
       Object.assign(symbols, match.symbols);
     }
     return symbols;
 }
 
-FunctionNode.prototype.match = function(pattern) {
+FunctionNode.prototype.match = function(pattern, options) {
 
   if (pattern.type == this.type && pattern.name === this.name && pattern.inputs.length == this.inputs.length) {
 
@@ -73,7 +73,7 @@ FunctionNode.prototype.match = function(pattern) {
       var permutations = permutate(this.inputs);
       var matched = false;
       for (var i=0; i<permutations.length; i++) {
-        var match = matchInputs(permutations[i], pattern);
+        var match = matchInputs(permutations[i], pattern, options);
         if (match === false) continue;
         matched = true;
         symbols = match;
@@ -83,7 +83,7 @@ FunctionNode.prototype.match = function(pattern) {
     }
     else {
       for (var i=0; i<this.inputs.length; i++) {
-        var match = this.inputs[i].match(pattern.inputs[i]);
+        var match = this.inputs[i].match(pattern.inputs[i], options);
         if (!match) return false;
         Object.assign(symbols, match.symbols);
       }
