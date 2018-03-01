@@ -2,13 +2,15 @@
 var Node = require('./Node');
 var LiteralNode = require('./LiteralNode');
 var OperatorNode = require('./OperatorNode');
+var FunctionNode = require('./FunctionNode');
+var SymbolNode = require('./SymbolNode');
 
 function fromJSON(json) {
 
   return root;
 };
 
-function wrap(valueOrNode, properties) {
+function toNode(valueOrNode, properties) {
   if (typeof valueOrNode == "number" || typeof valueOrNode == "string") {
     return LiteralNode(valueOrNode, properties);
   }
@@ -22,7 +24,7 @@ function wrap(valueOrNode, properties) {
   return valueOrNode;
 };
 
-function unwrap(valueOrNode) {
+function toValue(valueOrNode) {
   if (valueOrNode instanceof Node) {
     return valueOrNode.getValue();
   }
@@ -42,7 +44,9 @@ var DEFAULT_FORMAT = {
   OPERATOR_FIELD: 'op',
   NODE_TYPE_MAP: {
     'LiteralNode': 'LiteralNode',
-    'OperatorNode': 'OperatorNode'
+    'OperatorNode': 'OperatorNode',
+    'FunctionNode': 'FunctionNode',
+    'SymbolNode': 'SymbolNode'
   }
 };
 
@@ -84,8 +88,8 @@ function fromSpec(spec, format) {
 module.exports = {
 
   // main API methods
-  wrap: wrap,
-  unwrap: unwrap,
+  toNode: toNode,
+  toValue: toValue,
   isNode: isNode,
   fromJSON: fromJSON,
   toJSON: toJSON,
@@ -94,6 +98,11 @@ module.exports = {
   // node types
   Node: Node,
   LiteralNode: LiteralNode,
-  OperatorNode: OperatorNode
+  OperatorNode: OperatorNode,
+  FunctionNode: FunctionNode,
+  SymbolNode: SymbolNode,
+
+  // sublibraries
+  util: require('./util.js')
 
 };

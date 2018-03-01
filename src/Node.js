@@ -28,6 +28,26 @@ Node.prototype.traverse = function(callback) {
   _traverse(this, callback);
 };
 
+// Return false if the tree rooted at this node does not match the given pattern
+// Return an object {root: <Node>, symbols: {<name>: <Node>}} if the pattern is found
+
+Node.prototype.match = function(pattern) {
+
+  // base class only matches Symbols
+
+  if (pattern.type == 'SymbolNode') {
+    symbols = {};
+    symbols[pattern.name] = this;
+    return {
+      root: this,
+      symbols: symbols
+    }
+  }
+
+  return false;
+  
+}
+
 // TODO: maybe inheritance should be set up like so:
 // https://stackoverflow.com/a/4389429
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create

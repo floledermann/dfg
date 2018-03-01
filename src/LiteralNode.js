@@ -24,4 +24,17 @@ LiteralNode.prototype.forEach = function (callback) {
   // nothing to do, we don't have children
 };
 
+LiteralNode.prototype.match = function(pattern) {
+
+  if (pattern.type == 'LiteralNode' && pattern.value === this.value) {
+    return {
+      root: this,
+      symbols:{}
+    }
+  }
+
+  // check superclass (handles Symbols)
+  return this.constructor.prototype.match.call(this, pattern);
+}
+
 module.exports = LiteralNode;
