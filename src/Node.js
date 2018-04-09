@@ -13,6 +13,11 @@ Node.prototype.getValue = function() {
   return this.value;
 }
 
+Node.prototype.forEach = function(callback) {
+  // no children -> nothing to do
+  return;
+}
+
 Node.prototype.traverse = function(callback) {
   // execute callback for itself
   callback(this, null, null);

@@ -25,7 +25,7 @@ FunctionNode.prototype.toString = function() {
   return this.name;
 }
 
-FunctionNode.prototype.forEach = function (callback) {
+FunctionNode.prototype.forEach = function(callback) {
   for (var i = 0; i < this.inputs.length; i++) {
     callback(this.inputs[i], i, this);
   }
@@ -98,6 +98,5 @@ FunctionNode.prototype.match = function(pattern, options) {
   // check superclass (handles Symbols)
   return this.constructor.prototype.match.call(this, pattern);
 }
-
 
 module.exports = FunctionNode;

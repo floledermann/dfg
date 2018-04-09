@@ -5,10 +5,6 @@ var OperatorNode = require('./OperatorNode');
 var FunctionNode = require('./FunctionNode');
 var SymbolNode = require('./SymbolNode');
 
-function fromJSON(json) {
-
-  return root;
-};
 
 function toNode(valueOrNode, properties) {
   if (typeof valueOrNode == "number" || typeof valueOrNode == "string") {
@@ -40,9 +36,13 @@ function isNode(valueOrNode) {
 var DEFAULT_FORMAT = {
   TYPE_FIELD: 'type',
   VALUE_FIELD: 'value',
+  VALUE_TYPE_FIELD: 'valueType',
   INPUTS_FIELD: 'inputs',
   OPERATOR_FIELD: 'op',
-  NODE_TYPE_MAP: {
+  FUNCTION_NAME_FIELD: 'name',
+  SYMBOL_NAME_FIELD: 'name',
+  PROPERTIES_FIELD: '', // by default us object itself as properties
+  INPUT_NODE_TYPE_MAP: {
     'LiteralNode': 'LiteralNode',
     'OperatorNode': 'OperatorNode',
     'FunctionNode': 'FunctionNode',
@@ -50,6 +50,9 @@ var DEFAULT_FORMAT = {
   }
 };
 
+/**
+Construct a DFG from a JSON string.
+*/
 function fromJSON(jsonString, format) {
   var data = JSON.parse(jsonString);
   if (Array.isArray(data)) {
@@ -58,19 +61,17 @@ function fromJSON(jsonString, format) {
   return fromSpec(data, format);
 }
 
-function toJSON(graph, format) {
-  return '[]';
-}
-
+/**
+Construct a DFG from a JSON data structure.
+*/
 function fromSpec(spec, format) {
 
   format = Object.assign({}, DEFAULT_FORMAT, format);
 
   var typeStr = spec[format.TYPE_FIELD];
   var value = spec[format.VALUE_FIELD];
-  var op = spec[format.OPERATOR_FIELD];
 
-  var type = format.NODE_TYPE_MAP[typeStr];
+  var type = format.INPUT_NODE_TYPE_MAP[typeStr];
 
   var inputs = spec[format.INPUTS_FIELD] || [];
   // remove inputs from properties
@@ -79,11 +80,67 @@ function fromSpec(spec, format) {
 
   switch (type) {
     case 'LiteralNode': return new LiteralNode(value, spec);
-    case 'OperatorNode': return new OperatorNode(op, inputs, spec);
+    case 'OperatorNode': return new OperatorNode(spec[format.OPERATOR_FIELD], inputs, spec);
+    case 'FunctionNode': return new FunctionNode(spec[format.FUNCTION_NAME_FIELD], inputs, spec);
+    case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], spec);
   }
 
-  throw new Error("Unknown node type: " + type);
+  throw new Error("Unsupported node type: " + type);
 }
+
+/**
+Return JSON string representation of graph.
+*/
+function toJSON(node, format) {
+  return JSON.stringify(toSpec(node, format));
+}
+
+/**
+Convert a tree to its JSON specification.
+
+This is implemented here as a flat function instead of in individual Node classes,
+to make Nodes independent from data format stuff like DEFAULT_FORMAT etc.
+*/
+function toSpec(node, format) {
+  format = Object.assign({}, DEFAULT_FORMAT, format);
+
+  // construct inverted type string mapping if not already present
+  if (! format.OUTPUT_NODE_TYPE_MAP) {
+    format.OUTPUT_NODE_TYPE_MAP = {};
+    Object.entries(format.INPUT_NODE_TYPE_MAP).forEach((keyValue) => format.OUTPUT_NODE_TYPE_MAP[keyValue[1]] = keyValue[0]);
+  }
+
+  var type = node.type;
+  var spec = {};
+
+  spec[format.TYPE_FIELD] = format.OUTPUT_NODE_TYPE_MAP[type];
+  spec[format.VALUE_FIELD] = node.value;
+  spec[format.PROPERTIES_FIELD || 'properties'] = node.properties;
+
+  if (node instanceof LiteralNode) {
+    spec[format.VALUE_TYPE_FIELD] = node.valueType;
+  }
+
+  if (node instanceof SymbolNode) {
+    spec[format.SYMBOL_NAME_FIELD] = node.name;
+  }
+
+  if (node instanceof FunctionNode) {
+    spec[format.FUNCTION_NAME_FIELD] = node.name;
+  }
+
+  if (node instanceof OperatorNode) {
+    spec[format.OPERATOR_FIELD] = node.op;
+  }
+
+  if (node.inputs) {
+    spec[format.INPUTS_FIELD] = node.inputs.map(node => toSpec(node, format));
+  }
+
+  return spec;
+
+}
+
 
 module.exports = {
 
@@ -92,8 +149,9 @@ module.exports = {
   toValue: toValue,
   isNode: isNode,
   fromJSON: fromJSON,
-  toJSON: toJSON,
   fromSpec: fromSpec,
+  toJSON: toJSON,
+  toSpec: toSpec,
 
   // node types
   Node: Node,

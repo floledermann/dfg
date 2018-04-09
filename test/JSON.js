@@ -2,7 +2,7 @@ var assert = require('assert');
 
 var DFG = require('../index.js');
 
-describe("Loading JSON", function() {
+describe("Constructing from JSON", function() {
 
   describe("Empty & Malformed Input", function() {
 
@@ -98,6 +98,50 @@ describe("Loading JSON", function() {
 
   });
 
+});
 
 
+describe("Transforming to JSON", function() {
+
+  describe("Basic Node Types", function() {
+
+    it("Node (abstract base type) fails", function() {
+      assert.throws(function() {
+        DFG.toSpec(Node());
+      });
+    });
+
+    it("Literal Node", function() {
+      var node = DFG.LiteralNode("Foo");
+      var spec = DFG.toSpec(node);
+      assert.equal(spec.value, "Foo");
+      assert.equal(spec.valueType, "string");
+      assert.equal(spec.type, "LiteralNode");
+    });
+
+    it("Symbol Node", function() {
+      var node = DFG.SymbolNode("foo");
+      var spec = DFG.toSpec(node);
+      assert.equal(spec.name, "foo");
+      assert.equal(spec.type, "SymbolNode");
+    });
+
+    it("Function Node", function() {
+      var node = DFG.FunctionNode("add", [DFG.LiteralNode(1), DFG.LiteralNode(1)]);
+      var spec = DFG.toSpec(node);
+      assert.equal(spec.name, "add");
+      assert.equal(spec.inputs.length, 2);
+      assert.equal(spec.type, "FunctionNode");
+    });
+
+    it("Operator Node", function() {
+      var node = DFG.OperatorNode("+", [DFG.LiteralNode(1), DFG.LiteralNode(1)]);
+      var spec = DFG.toSpec(node);
+      assert.equal(spec.op, "+");
+      assert.equal(spec.inputs.length, 2);
+      assert.equal(spec.type, "OperatorNode");
+    });
+
+
+  });
 });

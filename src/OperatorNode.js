@@ -12,10 +12,9 @@ var FUNCTION_NAMES = {
 function OperatorNode(op, inputs, properties) {
   if (!(this instanceof OperatorNode)) { return new OperatorNode(op, inputs, properties); }
 
-  FunctionNode.call(this, FUNCTION_NAMES[op], properties);
+  FunctionNode.call(this, FUNCTION_NAMES[op], inputs, properties);
 
   this.op = op;
-  this.inputs = inputs;
 
   this.commutative = COMMUTATIVE_OPERATORS.includes(op);
 }
@@ -26,6 +25,5 @@ OperatorNode.prototype.type = 'OperatorNode';
 OperatorNode.prototype.toString = function() {
   return this.op;
 }
-
 
 module.exports = OperatorNode;
