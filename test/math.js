@@ -99,3 +99,30 @@ describe("From Math Expressions", function() {
   });
 
 });
+
+describe("To Math Expressions", function() {
+
+  describe("To String", function() {
+
+    function match(string) {
+      var node = DFG.util.fromMathString(string);
+      var result = DFG.util.toMathString(node);
+      assert.equal(string, result);
+    }
+
+    it("single nodes", function() {
+      match("2");
+      match("x");
+    });
+
+    it("simple expressions", function() {
+      match("2 + 2");
+      match("2 + x");
+      match("2 * 3");
+      match("2 * (3 + 3)");
+      match("2 * (n + 3)");
+    });
+
+  });
+
+});
