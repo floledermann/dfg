@@ -5,7 +5,7 @@ var DFG = require('../index.js');
 // test basic math first
 require("./math");
 
-describe("Match patterns in graph", function() {
+describe("Match graph patterns", function() {
 
   describe("Simple nodes", function() {
 
@@ -137,20 +137,6 @@ describe("Match patterns in graph", function() {
       var match = node.match(pattern, {epsilon: 0.00001});
 
       assert.strictEqual(match, false);
-    });
-
-  });
-
-  describe("Find in graph", function() {
-
-    it ("match Literal", function() {
-      var node = DFG.util.fromMathString("2 * 3");
-      var pattern = DFG.util.fromMathString("3");
-
-      var match = node.find(pattern);
-
-      assert(match);
-      assert.equal(match.root, node.inputs[1]);
     });
 
   });
