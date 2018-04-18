@@ -58,6 +58,19 @@ describe("Match graph patterns", function() {
 
   });
 
+  describe("Operations", function() {
+
+    it ("do not match non-matching patterns", function() {
+      var node = DFG.util.fromMathString("2 * 2");
+      var pattern = DFG.util.fromMathString("3 * 3");
+
+      var match = node.match(pattern);
+
+      assert.equal(false, match);
+    });
+
+  });
+  
   describe("Permutations", function() {
 
     it ("commutative Operators", function() {
@@ -96,6 +109,20 @@ describe("Match graph patterns", function() {
       assert.equal(match.symbols.z.type, 'LiteralNode');
       assert.equal(match.symbols.z.value, 2);
     });
+
+    it ("matches in Operation", function() {
+      var node = DFG.util.fromMathString("2 + 2");
+      var pattern = DFG.util.fromMathString("a + 2");
+
+      var match = node.match(pattern);
+
+      assert(match);
+      assert.equal(match.root, node);
+      assert.equal(match.symbols.a.type, 'LiteralNode');
+      assert.equal(match.symbols.a.value, 2);
+    assert.equal(match.symbols.a, node.inputs[0]);
+    });
+
 
   });
 

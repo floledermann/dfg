@@ -55,7 +55,7 @@ function permutate(inputArr) {
 
 function matchInputs(inputs, pattern, options) {
     var symbols = {};
-    for (var i=0; i<inputs; i++) {
+    for (var i=0; i<inputs.length; i++) {
       var match = inputs[i].match(pattern.inputs[i], options);
       if (!match) return false;
       Object.assign(symbols, match.symbols);
@@ -65,7 +65,7 @@ function matchInputs(inputs, pattern, options) {
 
 FunctionNode.prototype.match = function(pattern, options) {
 
-  if (pattern.type == this.type && pattern.name === this.name && pattern.inputs.length == this.inputs.length) {
+  if (pattern.type == this.type && pattern.name == this.name && pattern.inputs.length == this.inputs.length) {
 
     var symbols = {};
 
