@@ -85,7 +85,7 @@ function fromSpec(spec, format) {
     case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], spec);
   }
 
-  throw new Error("Unsupported node type: " + type);
+  throw new Error("Unsupported node type: " + type + " from type specifier: " + typeStr);
 }
 
 /**
