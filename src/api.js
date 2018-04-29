@@ -91,8 +91,8 @@ function fromSpec(spec, format) {
 /**
 Return JSON string representation of graph.
 */
-function toJSON(node, format) {
-  return JSON.stringify(toSpec(node, format));
+function toJSON(node, options) {
+  return JSON.stringify(toSpec(node, options.format), null, options.indent || 2);
 }
 
 /**
