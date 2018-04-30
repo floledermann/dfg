@@ -43,11 +43,13 @@ var DEFAULT_FORMAT = {
   SYMBOL_NAME_FIELD: 'name',
   PROPERTIES_FIELD: '', // by default us object itself as properties
   INPUT_NODE_TYPE_MAP: {
-    'LiteralNode': 'LiteralNode',
-    'OperatorNode': 'OperatorNode',
-    'FunctionNode': 'FunctionNode',
-    'SymbolNode': 'SymbolNode'
-  }
+    'Literal': 'LiteralNode',
+    'Operator': 'OperatorNode',
+    'Function': 'FunctionNode',
+    'Symbol': 'SymbolNode'
+  },
+  // callback function to trnasform input nodes before they are further processed.
+  INPUT_NODE_TRANSFORM: null
 };
 
 /**
@@ -67,6 +69,11 @@ Construct a DFG from a JSON data structure.
 function fromSpec(spec, format) {
 
   format = Object.assign({}, DEFAULT_FORMAT, format);
+
+  if (format.INPUT_NODE_TRANSFORM) spec = format.INPUT_NODE_TRANSFORM(spec);
+
+  // input processor can skip nodes by returning null
+  if (!spec) return null;
 
   var typeStr = spec[format.TYPE_FIELD];
   var value = spec[format.VALUE_FIELD];
