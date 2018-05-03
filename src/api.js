@@ -122,6 +122,7 @@ function toSpec(node, format) {
 
   spec[format.TYPE_FIELD] = format.OUTPUT_NODE_TYPE_MAP[type];
   spec[format.VALUE_FIELD] = node.value;
+  spec[format.VALUE_TYPE_FIELD] = node.valueType;
   spec[format.PROPERTIES_FIELD || 'properties'] = node.properties;
 
   if (node instanceof LiteralNode) {
