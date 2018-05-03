@@ -63,7 +63,7 @@ describe("Constructing from JSON", function() {
   describe("Single Nodes", function() {
 
     var node = DFG.fromJSON(`{
-      "type": "LiteralNode",
+      "type": "Literal",
       "value": 2
     }`);
 
@@ -80,7 +80,7 @@ describe("Constructing from JSON", function() {
   describe("Array of nodes", function() {
 
     var dfg = DFG.fromJSON(`[{
-      "type": "LiteralNode",
+      "type": "Literal",
       "value": 2
     }]`);
 
@@ -116,14 +116,14 @@ describe("Transforming to JSON", function() {
       var spec = DFG.toSpec(node);
       assert.equal(spec.value, "Foo");
       assert.equal(spec.valueType, "string");
-      assert.equal(spec.type, "LiteralNode");
+      assert.equal(spec.type, "Literal");
     });
 
     it("Symbol Node", function() {
       var node = DFG.SymbolNode("foo");
       var spec = DFG.toSpec(node);
       assert.equal(spec.name, "foo");
-      assert.equal(spec.type, "SymbolNode");
+      assert.equal(spec.type, "Symbol");
     });
 
     it("Function Node", function() {
@@ -131,7 +131,7 @@ describe("Transforming to JSON", function() {
       var spec = DFG.toSpec(node);
       assert.equal(spec.name, "add");
       assert.equal(spec.inputs.length, 2);
-      assert.equal(spec.type, "FunctionNode");
+      assert.equal(spec.type, "Function");
     });
 
     it("Operator Node", function() {
@@ -139,7 +139,7 @@ describe("Transforming to JSON", function() {
       var spec = DFG.toSpec(node);
       assert.equal(spec.op, "+");
       assert.equal(spec.inputs.length, 2);
-      assert.equal(spec.type, "OperatorNode");
+      assert.equal(spec.type, "Operator");
     });
 
 
