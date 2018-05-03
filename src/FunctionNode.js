@@ -6,10 +6,11 @@ COMMUTATIVE_FUNCTIONS = [
   'multiply'
 ];
 
-function FunctionNode(name, inputs, properties) {
-  if (!(this instanceof FunctionNode)) { return new FunctionNode(name, inputs, properties); }
+function FunctionNode(name, inputs, value, properties) {
+  // constructor can be used as factory function without 'new'
+  if (!(this instanceof FunctionNode)) { return new FunctionNode(name, inputs, value, properties); }
 
-  Node.call(this, properties);
+  Node.call(this, value, properties);
 
   this.name = name;
   this.inputs = inputs;

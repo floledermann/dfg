@@ -9,10 +9,11 @@ var FUNCTION_NAMES = {
   // TODO: add ops
 }
 
-function OperatorNode(op, inputs, properties) {
-  if (!(this instanceof OperatorNode)) { return new OperatorNode(op, inputs, properties); }
+function OperatorNode(op, inputs, value, properties) {
+  // constructor can be used as factory function without 'new'
+  if (!(this instanceof OperatorNode)) { return new OperatorNode(op, inputs, value, properties); }
 
-  FunctionNode.call(this, FUNCTION_NAMES[op], inputs, properties);
+  FunctionNode.call(this, FUNCTION_NAMES[op], inputs, value, properties);
 
   this.op = op;
 

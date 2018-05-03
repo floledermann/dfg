@@ -1,6 +1,10 @@
 
-function Node(properties) {
-  if (!(this instanceof Node)) { return new Node(); }
+function Node(value, properties) {
+  // constructor can be used as factory function without 'new'
+  if (!(this instanceof Node)) { return new Node(value, properties); }
+
+  this.value = value;
+  this.valueType = typeof value;
 
   this.properties = properties || {};
 }
@@ -10,6 +14,15 @@ Node.prototype.type = 'Node';
 Node.prototype.isNode = true;
 
 Node.prototype.getValue = function() {
+  return this.value;
+}
+
+Node.prototype.toString = function() {
+  // TODO: should string be enclosed in ""?
+  return this.value + '';
+}
+
+Node.prototype.valueOf = function() {
   return this.value;
 }
 
