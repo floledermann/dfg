@@ -5,8 +5,13 @@ var FUNCTION_NAMES = {
   '+': 'add',
   '-': 'subtract',
   '*': 'multiply',
-  '/': 'divide'
-  // TODO: add ops
+  '/': 'divide',
+  '%': 'remainder',
+  '++': 'inc',
+  '--': 'dec',
+  '**': 'exp'
+  // TODO: more operators?
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators
 }
 
 function OperatorNode(op, inputs, value, properties) {
