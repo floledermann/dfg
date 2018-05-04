@@ -41,7 +41,7 @@ var DEFAULT_FORMAT = {
   OPERATOR_FIELD: 'op',
   FUNCTION_NAME_FIELD: 'name',
   SYMBOL_NAME_FIELD: 'name',
-  PROPERTIES_FIELD: '', // by default us object itself as properties
+  PROPERTIES_FIELD: '', // by default use object itself as properties
   INPUT_NODE_TYPE_MAP: {
     'Literal': 'LiteralNode',
     'Operator': 'OperatorNode',
@@ -99,7 +99,7 @@ function fromSpec(spec, format) {
 Return JSON string representation of graph.
 */
 function toJSON(node, options) {
-  return JSON.stringify(toSpec(node, options.format), null, options.indent || 2);
+  return JSON.stringify(toSpec(node, options), null, options.indent || 2);
 }
 
 /**
@@ -108,8 +108,13 @@ Convert a tree to its JSON specification.
 This is implemented here as a flat function instead of in individual Node classes,
 to make Nodes independent from data format stuff like DEFAULT_FORMAT etc.
 */
-function toSpec(node, format) {
-  format = Object.assign({}, DEFAULT_FORMAT, format);
+function toSpec(node, options) {
+
+  options = Object.assign({}, {
+    omitProperties: []
+  }, options);
+
+  let format = Object.assign({}, DEFAULT_FORMAT, options.format);
 
   // construct inverted type string mapping if not already present
   if (! format.OUTPUT_NODE_TYPE_MAP) {
@@ -117,13 +122,22 @@ function toSpec(node, format) {
     Object.entries(format.INPUT_NODE_TYPE_MAP).forEach((keyValue) => format.OUTPUT_NODE_TYPE_MAP[keyValue[1]] = keyValue[0]);
   }
 
-  var type = node.type;
-  var spec = {};
+  let type = node.type;
+  let spec = {};
 
   spec[format.TYPE_FIELD] = format.OUTPUT_NODE_TYPE_MAP[type];
   spec[format.VALUE_FIELD] = node.value;
   spec[format.VALUE_TYPE_FIELD] = node.valueType;
-  spec[format.PROPERTIES_FIELD || 'properties'] = node.properties;
+
+  // shallow copy, omitting properties listed in options.omitProperties
+  debugger;
+  let propertiesOut = {};
+  Object.keys(node.properties).forEach(key => {
+    if (!options.omitProperties.includes(key)) {
+      propertiesOut[key] = node.properties[key];
+    }
+  })
+  spec[format.PROPERTIES_FIELD || 'properties'] = propertiesOut;
 
   if (node instanceof LiteralNode) {
     spec[format.VALUE_TYPE_FIELD] = node.valueType;
@@ -142,7 +156,7 @@ function toSpec(node, format) {
   }
 
   if (node.inputs) {
-    spec[format.INPUTS_FIELD] = node.inputs.map(node => toSpec(node, format));
+    spec[format.INPUTS_FIELD] = node.inputs.map(node => toSpec(node, options));
   }
 
   return spec;
