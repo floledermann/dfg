@@ -9,7 +9,7 @@ var FUNCTION_NAMES = {
   '%': 'remainder',
   '++': 'inc',
   '--': 'dec',
-  '**': 'exp'
+  '**': 'pow'
   // TODO: more operators?
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators
 }
