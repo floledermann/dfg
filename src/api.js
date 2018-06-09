@@ -92,7 +92,8 @@ function fromSpec(spec, format) {
     case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], value, spec);
   }
 
-  throw new Error("Unsupported node type: " + type + " from type specifier: " + typeStr);
+  return new SymbolNode("UNKNOWN", undefined, spec);
+  //throw new Error("Unsupported node type: " + type + " from type specifier: " + typeStr);
 }
 
 /**
@@ -130,7 +131,6 @@ function toSpec(node, options) {
   spec[format.VALUE_TYPE_FIELD] = node.valueType;
 
   // shallow copy, omitting properties listed in options.omitProperties
-  debugger;
   let propertiesOut = {};
   Object.keys(node.properties).forEach(key => {
     if (!options.omitProperties.includes(key)) {
