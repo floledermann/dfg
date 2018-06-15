@@ -84,15 +84,17 @@ function fromSpec(spec, format) {
   // remove inputs from properties
   delete spec[format.INPUTS_FIELD];
   inputs = inputs.map(spec => fromSpec(spec, format));
+  
+  var properties = format.PROPERTIES_FIELD ? spec[format.PROPERTIES_FIELD] : spec;
 
   switch (type) {
-    case 'LiteralNode': return new LiteralNode(value, spec);
-    case 'OperatorNode': return new OperatorNode(spec[format.OPERATOR_FIELD], inputs, value, spec);
-    case 'FunctionNode': return new FunctionNode(spec[format.FUNCTION_NAME_FIELD], inputs, value, spec);
-    case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], value, spec);
+    case 'LiteralNode': return new LiteralNode(value, properties);
+    case 'OperatorNode': return new OperatorNode(spec[format.OPERATOR_FIELD], inputs, value, properties);
+    case 'FunctionNode': return new FunctionNode(spec[format.FUNCTION_NAME_FIELD], inputs, value, properties);
+    case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], value, properties);
   }
 
-  return new SymbolNode("UNKNOWN", undefined, spec);
+  return new SymbolNode("UNKNOWN", undefined, properties);
   //throw new Error("Unsupported node type: " + type + " from type specifier: " + typeStr);
 }
 
@@ -120,7 +122,9 @@ function toSpec(node, options) {
   // construct inverted type string mapping if not already present
   if (! format.OUTPUT_NODE_TYPE_MAP) {
     format.OUTPUT_NODE_TYPE_MAP = {};
-    Object.entries(format.INPUT_NODE_TYPE_MAP).forEach((keyValue) => format.OUTPUT_NODE_TYPE_MAP[keyValue[1]] = keyValue[0]);
+    Object.entries(format.INPUT_NODE_TYPE_MAP).forEach(
+      (keyValue) => format.OUTPUT_NODE_TYPE_MAP[keyValue[1]] = keyValue[0]
+    );
   }
 
   let type = node.type;
