@@ -14,6 +14,11 @@ function FunctionNode(name, inputs, value, properties) {
   this.name = name;
   this.inputs = inputs;
 
+  // set parent for all inputs
+  if (this.inputs) {
+    this.inputs.forEach(n => n.parent = this);
+  }
+  
   this.commutative = COMMUTATIVE_FUNCTIONS.includes(name);
 
 }
