@@ -1,7 +1,6 @@
 var Node = require('./Node');
 
-// TODO
-COMMUTATIVE_FUNCTIONS = [
+const COMMUTATIVE_FUNCTIONS = [
   'add',
   'multiply'
 ];
