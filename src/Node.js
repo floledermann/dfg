@@ -68,6 +68,35 @@ Node.prototype.match = function(pattern, options) {
 }
 
 /**
+Finds the first node for which the callback return true.
+Traverses the graph in depth-first order.
+*/
+
+Node.prototype.findNodeByCallback = function(test) {
+  if (test(this)) return this;
+  if (this.inputs) {
+    for (let i=0; i<this.inputs.length; i++) {
+      let child = this.inputs[i];
+      let found = child.findNodeByCallback(test);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+/**
+Traverses ancestors as long as callback returns true.
+Returns node for which test for parent fails, or root node.
+*/
+Node.prototype.backtrack = function(test) {
+  if (this.parent && test(this.parent)) {
+    return this.parent.backtrack(test);
+  }
+  return this;
+}
+
+
+/**
 Finds all occurences of the given pattern in the subgraph.
 The provided callback is called with arguments (root: <Node>, symbols: {<name>: <Node>}) for each match.
 */
