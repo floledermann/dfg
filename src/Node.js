@@ -112,6 +112,10 @@ Node.prototype.find = function(pattern, callback, options) {
   }
 }
 
+/**
+Finds all occurences of the given pattern in the subgraph.
+Matched nodes are returned in an array
+*/
 Node.prototype.findAll = function(pattern, options) {
   var matches = [];
   this.find(pattern, (root, symbols) => matches.push({root: root, symbols: symbols}), options);
