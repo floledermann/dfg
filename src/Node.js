@@ -13,6 +13,10 @@ Node.prototype.type = 'Node';
 
 Node.prototype.isNode = true;
 
+Node.property.isLeafNode = function() {
+  return !(this.inputs && (this.inputs.length > 0))
+}
+
 Node.prototype.getValue = function() {
   return this.value;
 }
