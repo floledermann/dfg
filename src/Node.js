@@ -9,6 +9,8 @@ function Node(value, properties) {
   this.properties = properties || {};
 }
 
+/* Type info */
+
 Node.prototype.type = 'Node';
 
 Node.prototype.isNode = true;
@@ -16,6 +18,8 @@ Node.prototype.isNode = true;
 Node.prototype.isLeafNode = function() {
   return !(this.inputs && (this.inputs.length > 0))
 }
+
+/* Node Value */
 
 Node.prototype.getValue = function() {
   return this.value;
@@ -29,6 +33,8 @@ Node.prototype.toString = function() {
 Node.prototype.valueOf = function() {
   return this.value;
 }
+
+/* Properties */
 
 /**
 Adds a value to an Array property.
@@ -49,6 +55,8 @@ Node.prototype.addPropertyToSubtree = function(property, value, test) {
     }
   }
 }
+
+/* Traversal */
 
 Node.prototype.forEach = function(callback) {
   // no children -> nothing to do
