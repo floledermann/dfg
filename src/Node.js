@@ -30,6 +30,26 @@ Node.prototype.valueOf = function() {
   return this.value;
 }
 
+/**
+Adds a value to an Array property.
+*/
+Node.prototype.addProperty = function(property, value) {
+  this.properties[property] = this.properties[property] || [];
+  this.properties[property].push(value);
+}
+
+/**
+Adds a value to an Array property of the node and its descendents.
+*/
+Node.prototype.addPropertyToSubtree = function(property, value, test) {
+  if (!test || test(this)) {
+    this.addProperty(property, value);
+    if (this.inputs) {
+      this.inputs.forEach(n => n.addPropertyToSubtree(property, value, test));
+    }
+  }
+}
+
 Node.prototype.forEach = function(callback) {
   // no children -> nothing to do
   return;
