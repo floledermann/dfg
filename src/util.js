@@ -90,9 +90,14 @@ function toMathNode(node, options) {
 
 }
 
+function equalsEpsilon(a, b, epsilon=0.0000001) {
+  return Math.abs(a-b) < epsilon;
+}
+
 module.exports = {
   fromMathString: fromMathString,
   fromMathNode: fromMathNode,
   toMathNode: toMathNode,
-  toMathString: toMathString
+  toMathString: toMathString,
+  equalsEpsilon: equalsEpsilon
 }
