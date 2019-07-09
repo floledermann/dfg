@@ -33,24 +33,7 @@ function isNode(valueOrNode) {
   return valueOrNode instanceof Node;
 }
 
-var DEFAULT_FORMAT = {
-  TYPE_FIELD: 'type',
-  VALUE_FIELD: 'value',
-  VALUE_TYPE_FIELD: 'valueType',
-  INPUTS_FIELD: 'inputs',
-  OPERATOR_FIELD: 'op',
-  FUNCTION_NAME_FIELD: 'name',
-  SYMBOL_NAME_FIELD: 'name',
-  PROPERTIES_FIELD: '', // by default use object itself as properties
-  INPUT_NODE_TYPE_MAP: {
-    'Literal': 'LiteralNode',
-    'Operator': 'OperatorNode',
-    'Function': 'FunctionNode',
-    'Symbol': 'SymbolNode'
-  },
-  // callback function to trnasform input nodes before they are further processed.
-  INPUT_NODE_TRANSFORM: null
-};
+const DEFAULT_FORMAT = require('./format').default;
 
 /**
 Construct a DFG from a JSON string.
@@ -187,6 +170,7 @@ module.exports = {
   SymbolNode: SymbolNode,
 
   // sublibraries
-  util: require('./util.js')
+  util: require('./util.js'),
+  format: require('./format.js')
 
 };
