@@ -42,7 +42,7 @@ module.exports = {
       if (node.type == "math" && equalsEpsilon(node.val, Math.PI)) {
         node.type = "literal";
       }
-      delete node.stack;
+      //delete node.stack;
       return node;
     },
     OUTPUT_NODE_TYPE_MAP: {
