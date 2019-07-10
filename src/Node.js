@@ -38,10 +38,15 @@ Node.prototype.valueOf = function() {
 
 /**
 Adds a value to an Array property.
+Wraps single-value properties in an Array first.
 */
 Node.prototype.addProperty = function(property, value) {
-  this.properties[property] = this.properties[property] || [];
-  this.properties[property].push(value);
+  let prop = this.properties[property] || [];
+  if (!Array.isArray(prop)) {
+    prop = [prop];
+  }
+  prop.push(value);
+  this.properties[property] = prop;
 }
 
 /**
