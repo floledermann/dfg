@@ -35,7 +35,8 @@ module.exports = {
       'binary': 'OperatorNode',
       'unary': 'OperatorNode',
       'math': 'FunctionNode',
-      'property': 'FunctionNode'
+      'property': 'FunctionNode',
+      'function': 'FunctionNode'
     },
     INPUT_NODE_TRANSFORM: function(node) {
       // take care of math constants
