@@ -122,7 +122,7 @@ Node.prototype.findNodeByCallback = function(test) {
 }
 
 /**
-Traverses ancestors as long as callback returns true.
+Traverses ancestors as long as test callback returns true.
 Returns node for which test for parent fails, or root node.
 */
 Node.prototype.backtrack = function(test) {
