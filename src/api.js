@@ -46,6 +46,7 @@ function fromJSON(jsonString, format) {
   return fromSpec(data, format);
 }
 
+var idMap = {};
 /**
 Construct a DFG from a JSON data structure.
 */
@@ -57,6 +58,14 @@ function fromSpec(spec, format) {
 
   // input processor can skip nodes by returning null
   if (!spec) return null;
+  
+  var node = null, id = null;
+  
+  if (id = spec[format.REF_FIELD]) {
+    node = idMap[id];
+    if (!node) throw new Error("Node with id " + id + " referenced but not defined before");
+    return node;
+  }
 
   var typeStr = spec[format.TYPE_FIELD];
   var value = spec[format.VALUE_FIELD];
@@ -71,14 +80,26 @@ function fromSpec(spec, format) {
   var properties = format.PROPERTIES_FIELD ? spec[format.PROPERTIES_FIELD] : spec;
 
   switch (type) {
-    case 'LiteralNode': return new LiteralNode(value, properties);
-    case 'OperatorNode': return new OperatorNode(spec[format.OPERATOR_FIELD], inputs, value, properties);
-    case 'FunctionNode': return new FunctionNode(spec[format.FUNCTION_NAME_FIELD], inputs, value, properties);
-    case 'SymbolNode': return new SymbolNode(spec[format.SYMBOL_NAME_FIELD], value, properties);
+    case 'LiteralNode': node = new LiteralNode(value, properties);
+      break;
+    case 'OperatorNode': node = new OperatorNode(spec[format.OPERATOR_FIELD], inputs, value, properties);
+      break;
+    case 'FunctionNode': node = new FunctionNode(spec[format.FUNCTION_NAME_FIELD], inputs, value, properties);
+      break;
+    case 'SymbolNode': node = new SymbolNode(spec[format.SYMBOL_NAME_FIELD], value, properties);
+      break;
+    default: node = new SymbolNode("UNKNOWN", undefined, properties);
+  }
+  
+  if (id = node.properties[format.ID_FIELD]) {
+    idMap[id] = node;
+    // remove id for subsequent export
+    delete node.properties[format.ID_FIELD];
   }
 
-  return new SymbolNode("UNKNOWN", undefined, properties);
   //throw new Error("Unsupported node type: " + type + " from type specifier: " + typeStr);
+  
+  return node;
 }
 
 /**
@@ -88,6 +109,7 @@ function toJSON(node, options) {
   return JSON.stringify(toSpec(node, options), null, options.indent || 2);
 }
 
+var nodeID = 1;
 /**
 Convert a tree to its JSON specification.
 
@@ -101,6 +123,14 @@ function toSpec(node, options) {
   }, options);
 
   let format = Object.assign({}, DEFAULT_FORMAT, options.format);
+  
+  let id = null,
+      spec = {};
+  
+  if (id = node[format.ID_FIELD]) {
+    spec[format.REF_FIELD] = id;
+    return spec;
+  }
 
   // construct inverted type string mapping if not already present
   if (! format.OUTPUT_NODE_TYPE_MAP) {
@@ -111,11 +141,13 @@ function toSpec(node, options) {
   }
 
   let type = node.type;
-  let spec = {};
 
   spec[format.TYPE_FIELD] = format.OUTPUT_NODE_TYPE_MAP[type];
   spec[format.VALUE_FIELD] = node.value;
   spec[format.VALUE_TYPE_FIELD] = node.valueType;
+  
+  node[format.ID_FIELD] = nodeID;
+  spec[format.ID_FIELD] = nodeID++;
 
   // shallow copy, omitting properties listed in options.omitProperties
   let propertiesOut = {};

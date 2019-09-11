@@ -11,6 +11,8 @@ module.exports = {
     FUNCTION_NAME_FIELD: 'name',
     SYMBOL_NAME_FIELD: 'name',
     PROPERTIES_FIELD: '', // by default use object itself as properties
+    ID_FIELD: 'id',
+    REF_FIELD: 'ref',
     INPUT_NODE_TYPE_MAP: {
       'Literal': 'LiteralNode',
       'Operator': 'OperatorNode',
@@ -30,6 +32,8 @@ module.exports = {
     FUNCTION_NAME_FIELD: 'op',
     SYMBOL_NAME_FIELD: 'name',
     PROPERTIES_FIELD: '', // by default us object itself as properties
+    ID_FIELD: 'id',
+    REF_FIELD: 'ref',
     INPUT_NODE_TYPE_MAP: {
       'literal': 'LiteralNode',
       'binary': 'OperatorNode',
