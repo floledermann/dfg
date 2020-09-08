@@ -77,6 +77,11 @@ function fromSpec(spec, format) {
   delete spec[format.INPUTS_FIELD];
   inputs = inputs.map(spec => fromSpec(spec, format));
   
+  // process conditions as these may contained REFed nodes - otherwise leave alone
+  var conditions = spec[format.CONDITIONS_FIELD] || [];
+  // transform, but do not store (for now)
+  conditions.map(spec => fromSpec(spec, format));
+  
   var properties = format.PROPERTIES_FIELD ? spec[format.PROPERTIES_FIELD] : spec;
 
   switch (type) {
